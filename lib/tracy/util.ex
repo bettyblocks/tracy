@@ -7,10 +7,11 @@ defmodule Tracy.Util do
   end
 
   def start_trace(definition, pid, tracer) do
+    clear_traces()
     for mod <- definition.modules do
       :erlang.trace_pattern({mod, :_, :_}, true, [:local])
     end
-    :erlang.trace(pid, true, [:call, {:tracer, tracer}])
+    :erlang.trace(pid, true, [:call, {:tracer, tracer}, :return_to])
     :ok
   end
 

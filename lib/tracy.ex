@@ -11,7 +11,18 @@ defmodule Tracy do
   @spec check_start_trace(binary()) :: :started | :not_started
   def check_start_trace(identifier) do
     pid = :global.whereis_name(TracyWeb.Registry)
-    GenServer.call(__MODULE__, :command)
+    case is_pid(pid) and Process.alive?(pid) do
+      true ->
+        case GenServer.call(pid, {:check_start_trace, identifier}) do
+          {:ok, {definition, tracer}} ->
+            Tracy.Util.start_trace(definition, self(), tracer)
+            :started
+          {:error, :not_found} ->
+            :not_started
+        end
+      false ->
+        :not_started
+    end
   end
 
 end
