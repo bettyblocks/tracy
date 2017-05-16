@@ -3,12 +3,8 @@ defmodule Tracy.Definition do
 
   alias __MODULE__, as: Definition
 
-  def id() do
-    :crypto.strong_rand_bytes(20) |> Base.encode64
-  end
-
   def new(modules) do
-    %Definition{modules: modules, id: id()}
+    %Definition{modules: modules, id: Tracy.Util.id()}
   end
 
 end

@@ -5,6 +5,7 @@ defmodule Tracy.Application do
     import Supervisor.Spec
 
     children = [
+      worker(Tracy.Starter, []),
       supervisor(Tracy.TraceSupervisor, [])
     ]
 

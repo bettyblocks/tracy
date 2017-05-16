@@ -9,8 +9,11 @@ defmodule Tracy.TraceSupervisor do
     children = [
       worker(Tracy.Tracer, [])
     ]
-
     supervise(children, strategy: :simple_one_for_one)
+  end
+
+  def start_tracer(pid, definition, upstream) do
+    Supervisor.start_child(__MODULE__, [pid, definition, upstream])
   end
 
 end
