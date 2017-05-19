@@ -16,6 +16,8 @@ defmodule Tracy.Mixfile do
   end
 
   defp deps do
-    []
+    [
+      {:plug, "~> 1.3.4"}
+    ]
   end
 end

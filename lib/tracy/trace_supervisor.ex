@@ -7,7 +7,7 @@ defmodule Tracy.TraceSupervisor do
 
   def init([]) do
     children = [
-      worker(Tracy.Tracer, [])
+      worker(Tracy.Tracer, [], restart: :transient)
     ]
     supervise(children, strategy: :simple_one_for_one)
   end

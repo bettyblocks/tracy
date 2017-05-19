@@ -9,6 +9,6 @@ defmodule Tracy do
   Check to start a trace with the given identifier.
   """
   @spec check_start_trace(binary()) :: :ok
-  defdelegate check_start_trace(identifier), to: Starter
+  defdelegate check_start_trace(definition_id, session_id \\ nil), to: Starter
 
 end
