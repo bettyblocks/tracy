@@ -13,8 +13,6 @@ defmodule Tracy.Plug do
       nil ->
         :ok
       [definition_id] ->
-        IO.inspect definition_id, label: "definition_id"
-
         Tracy.check_start_trace(definition_id, Logger.metadata()[:request_id])
     end
     conn
