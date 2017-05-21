@@ -1,7 +1,7 @@
 defmodule Tracy.UtilTest do
   use ExUnit.Case
 
-  alias Tracy.{Util, Definition}
+  alias Tracy.{Util, TraceConfig}
 
   def test_string do
     String.upcase("a")
@@ -12,12 +12,13 @@ defmodule Tracy.UtilTest do
   test "tracing calls in modules" do
 
     pid = spawn(fn ->
-      :timer.sleep 100
+      receive do :start -> :ok end
       test_string()
     end)
 
-    definition = Definition.new([String])
+    definition = TraceConfig.new([String])
     :ok = Util.start_trace(definition, pid, self())
+    send(pid, :start)
 
     assert_receive {:trace, _, :call, {String, :upcase, ["a"]}}
     assert_receive {:trace, _, :return_to, {__MODULE__, :test_string, 0}}

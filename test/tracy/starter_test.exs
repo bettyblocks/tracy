@@ -1,9 +1,8 @@
 defmodule Tracy.StarterTest do
   use ExUnit.Case
 
-  test "starter has started" do
-    assert is_pid(Process.whereis(Tracy.Starter))
-
-    Tracy.Starter.check_start_trace "bla"
+  test "check_start_trace" do
+    assert :not_started = Tracy.Starter.check_start_trace "bla"
   end
+
 end

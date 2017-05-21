@@ -1,5 +1,7 @@
 defmodule Tracy.Util do
 
+  require Logger
+
   def id() do
     :crypto.strong_rand_bytes(10) |> Base.encode32
   end

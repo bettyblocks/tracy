@@ -16,8 +16,8 @@ defmodule Tracy.Tracer do
   use GenServer
 
   # Client API
-  def start_link(pid, definition, upstream) do
-    GenServer.start_link(__MODULE__, {pid, definition, upstream}, name: __MODULE__)
+  def start_link(pid, trace_config) do
+    GenServer.start_link(__MODULE__, {pid, trace_config}, name: __MODULE__)
   end
 
   def stats(pid) do
@@ -27,15 +27,14 @@ defmodule Tracy.Tracer do
   # Server callbacks
 
   defmodule State do
-    defstruct definition: nil, pid: nil, count: 0, upstream: nil
+    defstruct trace_config: nil, pid: nil, count: 0
   end
 
-  def init({pid, definition, upstream}) do
+  def init({pid, trace_config}) do
     Process.monitor(pid)
     state = %State{
       pid: pid,
-      definition: definition,
-      upstream: upstream
+      trace_config: trace_config
     }
     {:ok, state}
   end
@@ -46,7 +45,7 @@ defmodule Tracy.Tracer do
 
   def handle_info({:trace, pid, type, payload}, state = %{pid: pid}) do
     state = %State{state | count: state.count + 1}
-    send_upstream(type, payload, state.upstream)
+    send_upstream(type, payload, state.trace_config.upstream)
     # incoming trace
     if shutdown?(state) do
       {:stop, :normal, state}
@@ -60,8 +59,8 @@ defmodule Tracy.Tracer do
     {:stop, :normal, state}
   end
 
-  defp shutdown?(%{count: count, definition: definition}) do
-    count >= definition.max_calls
+  defp shutdown?(%{count: count, trace_config: trace_config}) do
+    count >= trace_config.max_calls
   end
 
   defp send_upstream(type, payload, nil), do: :ok

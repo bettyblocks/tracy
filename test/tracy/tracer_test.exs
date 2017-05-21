@@ -1,13 +1,13 @@
 defmodule Tracy.TracerTest do
   use ExUnit.Case
 
-  alias Tracy.{Definition, Tracer}
+  alias Tracy.{TraceConfig, Tracer}
 
   test "message limit of tracer server" do
-    definition = Definition.new([String])
+    definition = TraceConfig.new([String])
 
-    definition = %Definition{definition | max_calls: 10}
-    {:ok, pid} = Tracer.start_link(self(), definition, nil)
+    definition = %TraceConfig{definition | max_calls: 10}
+    {:ok, pid} = Tracer.start_link(self(), definition)
 
     for n <- 1..10 do
       assert %{count: n - 1} == Tracer.stats(pid)
@@ -21,11 +21,11 @@ defmodule Tracy.TracerTest do
   end
 
   test "tracer process stops when source proces exits" do
-    definition = Definition.new([String])
-    definition = %Definition{definition | max_calls: 10}
+    definition = TraceConfig.new([String])
+    definition = %TraceConfig{definition | max_calls: 10}
     {:ok, pid} = Tracer.start_link(
       spawn(fn -> :timer.sleep(50) end),
-      definition, nil)
+      definition)
 
     assert Process.alive?(pid)
     :timer.sleep 100
@@ -40,8 +40,9 @@ defmodule Tracy.TracerTest do
       send parent, :ok
     end)
 
-    definition = Definition.new([String])
-    {:ok, pid} = Tracer.start_link(self(), definition, upstream)
+    definition = TraceConfig.new([String])
+    |> Map.put(:upstream, upstream)
+    {:ok, pid} = Tracer.start_link(self(), definition)
 
     send pid, {:trace, self(), :call, :bla}
 
