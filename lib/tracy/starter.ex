@@ -16,9 +16,9 @@ defmodule Tracy.Starter do
     try do
       metadata = resolve_metadata(metadata_fn)
       case GenServer.call(coordinator, {:check_start_trace, definition_id, session_id, metadata}) do
-        {:ok, {id, definition, upstream}} ->
-          {:ok, tracer} = TraceSupervisor.start_tracer(process, definition, upstream)
-          Tracy.Util.start_trace(definition, process, tracer)
+        {:ok, {id, config}} ->
+          {:ok, tracer} = TraceSupervisor.start_tracer(process, config)
+          Tracy.Util.start_trace(config, process, tracer)
           send(process, {:trace_started, id})
           :started
         {:error, :not_found} ->

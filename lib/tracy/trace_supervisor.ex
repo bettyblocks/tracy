@@ -12,8 +12,8 @@ defmodule Tracy.TraceSupervisor do
     supervise(children, strategy: :simple_one_for_one)
   end
 
-  def start_tracer(pid, definition, upstream) do
-    Supervisor.start_child(__MODULE__, [pid, definition, upstream])
+  def start_tracer(pid, trace_config) do
+    Supervisor.start_child(__MODULE__, [pid, trace_config])
   end
 
 end
