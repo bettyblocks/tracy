@@ -6,7 +6,7 @@ defmodule Tracy.TracerTest do
   test "message limit of tracer server" do
     definition = TraceConfig.new([String])
 
-    definition = %TraceConfig{definition | max_calls: 10}
+    definition = %TraceConfig{definition | max_entries: 10}
     {:ok, pid} = Tracer.start_link(self(), definition)
 
     for n <- 1..10 do
@@ -22,7 +22,7 @@ defmodule Tracy.TracerTest do
 
   test "tracer process stops when source proces exits" do
     definition = TraceConfig.new([String])
-    definition = %TraceConfig{definition | max_calls: 10}
+    definition = %TraceConfig{definition | max_entries: 10}
     {:ok, pid} = Tracer.start_link(
       spawn(fn -> :timer.sleep(50) end),
       definition)

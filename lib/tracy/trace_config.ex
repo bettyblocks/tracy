@@ -1,5 +1,5 @@
 defmodule Tracy.TraceConfig do
-  defstruct modules: [], id: nil, max_calls: 20000, upstream: nil
+  defstruct modules: [], id: nil, max_entries: 20000, upstream: nil
 
   alias __MODULE__, as: TraceConfig
 
