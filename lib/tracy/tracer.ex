@@ -64,7 +64,7 @@ defmodule Tracy.Tracer do
     count >= trace_config.max_entries
   end
 
-  defp send_upstream(message, nil), do: :ok
+  defp send_upstream(_message, nil), do: :ok
   defp send_upstream(message, pid) do
     send pid, message
   end
