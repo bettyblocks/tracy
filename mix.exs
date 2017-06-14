@@ -21,7 +21,8 @@ defmodule Tracy.Mixfile do
 
   defp deps do
     [
-      {:plug, "~> 1.3.4"}
+      {:plug, "~> 1.3.4"},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
